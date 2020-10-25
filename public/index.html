@@ -1,0 +1,132 @@
+    <!DOCTYPE html>
+    <html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <style>
+            form {
+                display: flex;
+                justify-content: center;
+                justify-items: center;
+            }
+
+            table {
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            th,
+            td {
+                text-align: left;
+                padding: 8px;
+            }
+
+            tr:nth-child(even) {
+                background-color: #f2f2f2
+            }
+
+            th {
+                background-color: #4CAF50;
+                color: white;
+            }
+
+            .delete_profile {
+                color: red;
+                cursor: pointer;
+            }
+
+            .edit_profile {
+                cursor: pointer;
+                color: rgb(255, 166, 0);
+            }
+
+        </style>
+    </head>
+
+    <body>
+        <form action="" id="myform">
+            <input type="text" placeholder="username" name="username" value="">
+            <input type="password" placeholder="password" name="password" value="">
+            <button type="submit" value="submit" class="btn">Submit</button>
+        </form>
+            
+        <table>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Password</th>
+                    <th>ID</th>
+                    <th>Profile</th>
+                    <th>Delete Profile</th>
+                    <th>Edit Profile</th>
+                </tr>
+            </thead>
+            <tbody id="usersList">
+
+            </tbody>
+
+        </table>
+        <script>
+
+            $(document).ready(function () {
+                buildPage();
+            })
+
+            $(document).on('click', '.delete_profile', function () {
+                var id = $(this).parent().parent().find('input[name="id"]').val();
+                $.ajax({
+                    url: '/users/' + id,
+                    type: 'DELETE',
+                    success: function (rep) {
+                        buildPage();
+                    }
+                })
+            })
+
+            $(document).on('click', '.edit_profile', function () {
+                var userData = $(this).parent().parent().find('input').serialize();
+                var id = $(this).parent().parent().find('input[name="id"]').val();
+                $.ajax({
+                url: '/users/' +id
+                , type: 'PUT'
+                , data: userData
+                , success: function (rep) {
+                    console.log(rep);
+                    buildPage();
+                }
+                
+            })
+
+            })
+            document.getElementsByClassName('btn')[0].addEventListener('click', function () {
+                var username = document.getElementsByName('username').value;
+                var password = document.getElementsByName('password').value;
+                $.post('/users', $('#myform').serialize()).done(function (data) {
+                    console.log(data);
+                    buildPage();
+                })
+            })
+            function buildPage() {
+                $('#usersList').html(' ');
+                $.getJSON('/users', function (data) {
+
+                    $.each(data, function (i, value) {
+
+                        var el =  '<tr><td><input type="text" name="username" value="'+value.username+'"</td>';
+                            el += '<td><input type="text" name="password" value="'+value.password+'"</td>';
+                            el += '<td><input type="text" name="id" value="'+value.id+'"</td>';
+                            el += '<td><a href="/users/' + value.id + '" target="_blank">' + 'See Profile' + '</a></td>';
+                            el += '<td><span class="delete_profile">Delete</span></td>';
+                            el += '<td><span class="edit_profile">SAVE</span></td></tr>';
+                        var newList = $(el);
+                        $('#usersList').append(newList);
+                    })
+                })
+            }    
+        </script>
+    </body>
+
+    </html>

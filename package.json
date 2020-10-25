@@ -1,0 +1,25 @@
+{
+  "name": "nekhilesh-app",
+  "version": "1.0.0",
+  "description": "I am making a Rest API here",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nikerocker/nekhilesh-rest-api"
+  },
+  "keywords": [
+    "api"
+  ],
+  "author": "nekhilesh",
+  "license": "ISC",
+  "dependencies": {
+    "aws-serverless-express": "^3.3.8",
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "serverless": "^1.72.0",
+    "sqlite3": "^4.2.0"
+  }
+}
